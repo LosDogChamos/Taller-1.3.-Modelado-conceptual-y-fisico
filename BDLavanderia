@@ -1,0 +1,176 @@
+USE master
+GO
+
+ALTER DATABASE BDLavanderia SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+GO
+
+DROP DATABASE IF EXISTS BDLavanderia
+GO
+
+CREATE DATABASE BDLavanderia
+GO
+
+USE BDLavanderia
+GO
+
+-- =============================================
+-- TABLA: Proveedor
+-- =============================================
+CREATE TABLE Proveedor
+(
+    idProveedor   INT PRIMARY KEY IDENTITY(1, 1),
+    nombre        VARCHAR(100) NOT NULL,
+    direccion     VARCHAR(200) NOT NULL,
+    telefono      VARCHAR(20)  NOT NULL,
+    email         VARCHAR(100) NOT NULL
+)
+GO
+
+-- =============================================
+-- TABLA: Cliente
+-- =============================================
+CREATE TABLE Cliente
+(
+    idCliente   INT PRIMARY KEY IDENTITY(1, 1),
+    nombre      VARCHAR(100) NOT NULL,
+    direccion   VARCHAR(200) NOT NULL,
+    telefono    VARCHAR(20)  NOT NULL
+)
+GO
+
+-- =============================================
+-- TABLA: Comprobante
+-- (depende de Cliente)
+-- =============================================
+CREATE TABLE Comprobante
+(
+    IdServicio      INT PRIMARY KEY IDENTITY(1, 1),
+    nombre          VARCHAR(100)  NOT NULL,
+    precio          DECIMAL(10,2) NOT NULL,
+    tiempoEstimado  DATE          NOT NULL,
+    idCliente       INT           NOT NULL,
+    CONSTRAINT FK_Comprobante_Cliente
+        FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
+)
+GO
+
+-- =============================================
+-- TABLA: DetalleMovimiento
+-- (depende de Comprobante)
+-- =============================================
+CREATE TABLE DetalleMovimiento
+(
+    idDetalle       INT PRIMARY KEY IDENTITY(1, 1),
+    cantidad        INT           NOT NULL,
+    subtotal        DECIMAL(10,2) NOT NULL,
+    tipoMovimiento  VARCHAR(50)   NOT NULL,
+    idComprobante   INT           NOT NULL,
+    CONSTRAINT FK_DetalleMovimiento_Comprobante
+        FOREIGN KEY (idComprobante) REFERENCES Comprobante(IdServicio)
+)
+GO
+
+-- =============================================
+-- TABLA: OrdenCompra
+-- (depende de Proveedor y DetalleMovimiento)
+-- Relacion invertida: OrdenCompra apunta a DetalleMovimiento
+-- =============================================
+CREATE TABLE OrdenCompra
+(
+    idOrdenCompra INT PRIMARY KEY IDENTITY(1, 1),
+    fecha         DATE          NOT NULL,
+    hora          TIME          NOT NULL,
+    montoTotal    DECIMAL(10,2) NOT NULL,
+    idProveedor   INT           NOT NULL,
+    idDetalle     INT           NOT NULL,
+    CONSTRAINT FK_OrdenCompra_Proveedor
+        FOREIGN KEY (idProveedor) REFERENCES Proveedor(idProveedor),
+    CONSTRAINT FK_OrdenCompra_DetalleMovimiento
+        FOREIGN KEY (idDetalle) REFERENCES DetalleMovimiento(idDetalle)
+)
+GO
+
+-- =============================================
+-- TABLA: Electrodomestico
+-- (depende de DetalleMovimiento)
+-- Relacion invertida: Electrodomestico apunta a DetalleMovimiento
+-- =============================================
+CREATE TABLE Electrodomestico
+(
+    idElectrodomestico INT PRIMARY KEY IDENTITY(1, 1),
+    nombre             VARCHAR(100)  NOT NULL,
+    descripcion        VARCHAR(250)  NULL,
+    marca              VARCHAR(100)  NOT NULL,
+    precioCompra       DECIMAL(10,2) NOT NULL,
+    precioVenta        DECIMAL(10,2) NOT NULL,
+    idDetalle          INT           NOT NULL,
+    CONSTRAINT FK_Electrodomestico_DetalleMovimiento
+        FOREIGN KEY (idDetalle) REFERENCES DetalleMovimiento(idDetalle)
+)
+GO
+
+-- =============================================
+-- INSERTS DE PRUEBA
+-- =============================================
+
+INSERT INTO Proveedor (nombre, direccion, telefono, email) VALUES
+('Distribuidora Lima SAC',   'Av. Industrial 123, Lima',    '014567890', 'contacto@distrima.com'),
+('Electroimport Peru',       'Jr. Comercio 456, Callao',    '016789012', 'ventas@electroimport.pe'),
+('Suministros Textiles SA',  'Calle Fabril 789, Surquillo', '013456789', 'info@sumtextil.com')
+GO
+
+INSERT INTO Cliente (nombre, direccion, telefono) VALUES
+('Carlos Mendoza', 'Av. Los Pinos 123, Miraflores',  '987654321'),
+('Ana Torres',     'Jr. Las Flores 456, San Isidro', '976543210'),
+('Luis Huanca',    'Calle Palmeras 789, Surco',      '965432109'),
+('Rosa Quispe',    'Av. Central 321, La Molina',     '954321098'),
+('Miguel Salas',   'Jr. Los Alamos 654, San Borja',  '943210987')
+GO
+
+INSERT INTO Comprobante (nombre, precio, tiempoEstimado, idCliente) VALUES
+('Lavado Normal',      25.00, '2024-02-05', 1),
+('Lavado y Planchado', 45.00, '2024-02-06', 2),
+('Lavado Express',     35.00, '2024-02-05', 3),
+('Planchado Simple',   15.00, '2024-02-07', 4),
+('Lavado Completo',    60.00, '2024-02-08', 5)
+GO
+
+INSERT INTO DetalleMovimiento (cantidad, subtotal, tipoMovimiento, idComprobante) VALUES
+(1, 1500.00, 'Compra', 1),
+(1, 1300.00, 'Compra', 2),
+(2,  960.00, 'Compra', 3),
+(1, 1050.00, 'Compra', 4),
+(1,  780.00, 'Compra', 5)
+GO
+
+INSERT INTO OrdenCompra (fecha, hora, montoTotal, idProveedor, idDetalle) VALUES
+('2024-01-10', '09:00', 1500.00, 1, 1),
+('2024-01-15', '11:30', 2300.50, 2, 2),
+('2024-02-01', '08:45',  980.00, 3, 3),
+('2024-02-20', '14:00', 3200.00, 1, 4)
+GO
+
+INSERT INTO Electrodomestico (nombre, descripcion, marca, precioCompra, precioVenta, idDetalle) VALUES
+('Lavadora Industrial', 'Lavadora de 20kg capacidad',    'LG',        1200.00, 1500.00, 1),
+('Secadora Industrial', 'Secadora de 15kg capacidad',    'Samsung',   1000.00, 1300.00, 2),
+('Plancha Industrial',  'Plancha de vapor profesional',  'Tefal',      350.00,  480.00, 3),
+('Centrifugadora',      'Centrifugadora de 10kg',        'Whirlpool',  800.00, 1050.00, 4),
+('Lavadora Domestica',  'Lavadora de uso domestico 8kg', 'Mabe',       600.00,  780.00, 5)
+GO
+
+-- =============================================
+-- VERIFICACION DE DATOS
+-- =============================================
+SELECT 'PROVEEDOR'         AS Tabla, * FROM Proveedor
+GO
+SELECT 'CLIENTE'           AS Tabla, * FROM Cliente
+GO
+SELECT 'COMPROBANTE'       AS Tabla, * FROM Comprobante
+GO
+SELECT 'DETALLEMOVIMIENTO' AS Tabla, * FROM DetalleMovimiento
+GO
+SELECT 'ORDENCOMPRA'       AS Tabla, * FROM OrdenCompra
+GO
+SELECT 'ELECTRODOMESTICO'  AS Tabla, * FROM Electrodomestico
+GO
+, lavanderia
