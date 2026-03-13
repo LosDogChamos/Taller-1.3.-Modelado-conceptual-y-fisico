@@ -1,0 +1,133 @@
+USE master
+GO
+
+IF DB_ID('BD_Ecommerce') IS NOT NULL
+DROP DATABASE BD_Ecommerce
+GO
+
+CREATE DATABASE BD_Ecommerce
+GO
+
+USE BD_Ecommerce
+GO
+
+
+-- =====================
+-- MARCA
+-- =====================
+CREATE TABLE Marca(
+    idMarca INT PRIMARY KEY,
+    nombre VARCHAR(100),
+    paisOrigen VARCHAR(100)
+)
+GO
+
+
+-- =====================
+-- CATEGORIA
+-- =====================
+CREATE TABLE Categoria(
+    idCategoria INT PRIMARY KEY,
+    nombre VARCHAR(100),
+    descripcionCategoria VARCHAR(200)
+)
+GO
+
+
+-- =====================
+-- PRODUCTO
+-- =====================
+CREATE TABLE Producto(
+    idProducto INT PRIMARY KEY,
+    nombreProducto VARCHAR(150),
+    descripcionProducto VARCHAR(200),
+    precioCompra DECIMAL(10,2),
+    stockProducto INT,
+
+    idMarca INT,
+    idCategoria INT,
+
+    FOREIGN KEY (idMarca) REFERENCES Marca(idMarca),
+    FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria)
+)
+GO
+
+
+-- =====================
+-- PEDIDO
+-- =====================
+CREATE TABLE Pedido(
+    idPedido INT PRIMARY KEY,
+    fecha DATE,
+    estado VARCHAR(50),
+    direccionEnvio VARCHAR(200),
+
+    idProducto INT,
+
+    FOREIGN KEY (idProducto) REFERENCES Producto(idProducto)
+)
+GO
+
+
+-- =====================
+-- CLIENTE
+-- =====================
+CREATE TABLE Cliente(
+    idCliente INT PRIMARY KEY,
+    nombreCompleto VARCHAR(150),
+    email VARCHAR(150),
+    contraseña VARCHAR(100),
+    direccionPrincipal VARCHAR(200)
+)
+GO
+
+
+-- =====================
+-- ITEM PEDIDO
+-- =====================
+CREATE TABLE ItemPedido(
+    idItem INT PRIMARY KEY,
+    cantidad INT,
+    precioUnitario DECIMAL(10,2),
+    subtotal DECIMAL(10,2),
+
+    idPedido INT,
+    idCliente INT,
+
+    FOREIGN KEY (idPedido) REFERENCES Pedido(idPedido),
+    FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
+)
+GO
+
+
+-- =====================
+-- DIRECCION ENVIO
+-- =====================
+CREATE TABLE DireccionEnvio(
+    idDireccion INT PRIMARY KEY,
+    direccionCompleta VARCHAR(200),
+    ciudad VARCHAR(100),
+    codigoPostal VARCHAR(20),
+    pais VARCHAR(100),
+
+    idCliente INT,
+
+    FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
+)
+GO
+
+
+-- =====================
+-- OPINION
+-- =====================
+CREATE TABLE Opinion(
+    idOpinion INT PRIMARY KEY,
+    calificacion INT,
+    comentario VARCHAR(300),
+    fecha DATE,
+
+    idCliente INT,
+
+    FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
+)
+GO
