@@ -1,1 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller 1.3: Modelado conceptual y físico - Los Dog Chamos 2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f4f7fc;
+            color: #1e2b3a;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 40px -10px rgba(0,20,40,0.2);
+            border-radius: 28px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(145deg, #002b4a, #0a3f5f);
+            color: white;
+            padding: 2rem 2.5rem;
+            border-bottom: 6px solid #f5c542;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .header h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+            display: block;
+            margin-top: 0.5rem;
+            border-left: 3px solid #f5c542;
+            padding-left: 1rem;
+        }
+        .uni-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            font-weight: 300;
+        }
+        .team-section {
+            background: #f0f4fa;
+            padding: 1.8rem 2.5rem;
+            border-bottom: 1px solid #d0ddee;
+        }
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2.5rem;
+            margin-top: 1rem;
+        }
+        .member {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .member .name {
+            font-weight: 600;
+        }
+        .member .percent {
+            background: #1e3b4f;
+            color: white;
+            border-radius: 40px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .member .zero {
+            background: #8a2f2f;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0a3144;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 4px solid #f5c542;
+            display: inline-block;
+        }
+        .content {
+            padding: 0.5rem 2.5rem 2.5rem 2.5rem;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.8rem 0;
+        }
+        .card-img {
+            background: #eaf0f6;
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid #c9d9e9;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            text-align: center;
+        }
+        .card-img img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px -8px rgba(0,40,70,0.3);
+            border: 2px solid white;
+            background: white;
+            max-height: 300px;
+            object-fit: contain;
+        }
+        .caption {
+            text-align: center;
+            margin-top: 0.8rem;
+            font-weight: 600;
+            color: #1f4b6e;
+            font-size: 1.1rem;
+        }
+        .sub-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #3a5e7a;
+            margin-top: 0.2rem;
+        }
+        .file-name {
+            background: #002b4a;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+        .code-block {
+            background: #1d2b3a;
+            color: #e2e9f2;
+            padding: 1.5rem;
+            border-radius: 24px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            margin: 1.5rem 0;
+            border-left: 6px solid #f5c542;
+        }
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #1f2e3a;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 0.5rem 0 1.5rem 0;
+            transition: all 0.2s;
+            border: 1px solid #3f5568;
+        }
+        .btn-github:hover {
+            background: #0f1e2c;
+            transform: scale(1.02);
+            border-color: #f5c542;
+        }
+        .ref-link {
+            background: #ecf3fa;
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 1rem 0;
+            font-weight: 500;
+            word-break: break-all;
+        }
+        .footer {
+            background: #d9e3ef;
+            padding: 1.5rem 2.5rem;
+            text-align: center;
+            color: #1f3d55;
+            border-top: 2px solid #b4c8e0;
+            font-size: 0.95rem;
+        }
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, #c0d4e8, transparent);
+            margin: 2rem 0;
+        }
+        ul, ol {
+            padding-left: 1.8rem;
+            margin: 1rem 0;
+        }
+        li {
+            margin: 0.4rem 0;
+        }
+        .highlight {
+            background: #fcf2d7;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            color: #2b4f6e;
+        }
+        .badge {
+            background: #f5c542;
+            color: #002b4a;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+        .note-box {
+            background: #fff9e6;
+            border-left: 5px solid #f5c542;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Taller 1.3 · Modelado conceptual y físico
+            <small>Facultad de Ingeniería y Arquitectura · Universidad Andina del Cusco</small>
+        </h1>
+        <div class="uni-details">
+            <span><strong>Curso:</strong> Modelado de Base de Datos</span>
+            <span><strong>Docente:</strong> Hugo Espetia Huamanga</span>
+            <span><strong>Ciclo:</strong> 2026</span>
+        </div>
+    </div>
 
+    <div class="team-section">
+        <h2 style="font-weight:500; margin-bottom:0.2rem;">⚡ Equipo de desarrollo</h2>
+        <div style="font-size:1.2rem; margin-bottom:1rem; color:#15455e;">Los Dog Chamos 2.0 (ahora sí)</div>
+        <div class="team-grid">
+            <div class="member"><span class="name">👤 Andia Palomino Rodrigo Inti (SM)</span> <span class="percent">100%</span></div>
+            <div class="member"><span class="name">👤 Ramos Hancco Diego Alonso</span> <span class="percent">100%</span></div>
+            <div class="member"><span class="name">👤 Mamani Apaza Renato Aldair</span> <span class="percent">100%</span></div>
+            <div class="member"><span class="name">👤 Pancca Tinta Sergio Reynaldo</span> <span class="percent zero">0%</span></div>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- INTRODUCCIÓN -->
+        <h2 class="section-title">📘 Introducción</h2>
+        <p style="font-size:1.1rem; margin-bottom:1.2rem;">
+            El modelado de bases de datos es la columna vertebral de cualquier sistema de información robusto. 
+            Este taller (versión 1.3) aborda la transición desde el <strong>modelo conceptual</strong> (entidades, relaciones, restricciones semánticas) 
+            hacia el <strong>modelo físico</strong> (sentencias DDL, tipos de datos, claves, índices). A partir de dos escenarios de negocio —un sistema de inventario con control de entradas/salidas y una plataforma de comercio electrónico— 
+            el equipo <em>Los Dog Chamos 2.0</em> desarrolló los diagramas y su correspondiente implementación en SQL.
+        </p>
+        
+        <div class="note-box">
+            <strong>📂 Nota sobre las imágenes:</strong> Las imágenes mostradas a continuación (<strong>Img_1.0, Img_1.1, Img_2.0, Img_2.1</strong>) se encuentran en la misma carpeta que este documento. 
+            Si no se visualizan correctamente, verifica que los archivos existan en el directorio contiguo.
+        </div>
+
+        <!-- ========= CASO 1 ========= -->
+        <h2 class="section-title">🧊 Caso 1 · Sistema ABC (electrodomésticos)</h2>
+        <p><strong>Requerimiento:</strong> Tienda de electrodomésticos que requiere control de inventario con entradas (proveedores + orden de compra) y salidas (clientes + comprobante), usando un detalle compartido con signo.</p>
+        
+        <div class="badge">📸 Imágenes del Caso 1 (archivos contiguos)</div>
+        <div class="image-grid">
+            <div class="card-img">
+                <img src="Img_1.0.png" alt="Modelo conceptual Lucidchart - Sistema ABC" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\' viewBox=\'0 0 400 200\'%3E%3Crect width=\'400\' height=\'200\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50\' y=\'100\' font-family=\'Arial\' font-size=\'14\' fill=\'%23555\'%3EImg_1.0.png (Lucidchart - conceptual)%3C/text%3E%3Ctext x=\'50\' y=\'130\' font-family=\'Arial\' font-size=\'12\' fill=\'%23777\'%3EArchivo no encontrado%3C/text%3E%3C/svg%3E'">
+                <div class="caption">Img 1.0: Modelo conceptual (Lucidchart)</div>
+                <div class="sub-caption">Diagrama Entidad-Relación del sistema de electrodomésticos</div>
+                <span class="file-name">Img_1.0.png</span>
+            </div>
+            <div class="card-img">
+                <img src="Img_1.1.png" alt="Modelo físico SQL - Sistema ABC" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\' viewBox=\'0 0 400 200\'%3E%3Crect width=\'400\' height=\'200\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50\' y=\'100\' font-family=\'Arial\' font-size=\'14\' fill=\'%23555\'%3EImg_1.1.png (SQL - físico)%3C/text%3E%3Ctext x=\'50\' y=\'130\' font-family=\'Arial\' font-size=\'12\' fill=\'%23777\'%3EArchivo no encontrado%3C/text%3E%3C/svg%3E'">
+                <div class="caption">Img 1.1: Modelo físico (SQL)</div>
+                <div class="sub-caption">Implementación de tablas, relaciones y constraints</div>
+                <span class="file-name">Img_1.1.png</span>
+            </div>
+        </div>
+
+        <h3>🔍 Análisis y decisiones de diseño</h3>
+        <ul>
+            <li><span class="highlight">Entidad DETALLE</span> actúa como tabla de unión entre <strong>ORDEN_COMPRA</strong> y <strong>ELECTRODOMÉSTICO</strong>, pero a su vez se relaciona con <strong>COMPROBANTE</strong> para registrar salidas. Para cumplir el requerimiento de signo, la cantidad acepta valores positivos (entrada) y negativos (salida).</li>
+            <li><strong>PROVEEDOR</strong> (1) → (N) ORDEN_COMPRA: un proveedor puede tener muchas órdenes; cada orden pertenece a un único proveedor.</li>
+            <li><strong>CLIENTE</strong> y <strong>COMPROBANTE</strong> (1:N): un cliente puede tener varios comprobantes (ventas).</li>
+            <li>El detalle hereda las claves foráneas de electrodoméstico, orden y comprobante (opcional según sea entrada/salida).</li>
+        </ul>
+
+        <h3>📄 Script de implementación física (DDL reducido)</h3>
+        <div class="code-block">
+-- Extracto del modelo físico (BDLavanderia)
+CREATE TABLE proveedor (
+    id_proveedor INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    ruc VARCHAR(20) UNIQUE,
+    telefono VARCHAR(20)
+);
+
+CREATE TABLE orden_compra (
+    id_orden INT PRIMARY KEY AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    hora TIME,
+    monto_total DECIMAL(10,2),
+    id_proveedor INT,
+    FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+);
+
+CREATE TABLE electrodomestico (
+    id_electro INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    marca VARCHAR(50),
+    precio_compra DECIMAL(10,2),
+    precio_venta DECIMAL(10,2)
+);
+
+CREATE TABLE comprobante (
+    id_comprobante INT PRIMARY KEY AUTO_INCREMENT,
+    serie VARCHAR(20),
+    fecha_emision DATETIME,
+    id_cliente INT
+);
+
+CREATE TABLE detalle_movimiento (
+    id_detalle INT PRIMARY KEY AUTO_INCREMENT,
+    cantidad INT,
+    subtotal DECIMAL(10,2),
+    id_electro INT,
+    id_orden INT NULL,
+    id_comprobante INT NULL,
+    FOREIGN KEY (id_electro) REFERENCES electrodomestico(id_electro),
+    FOREIGN KEY (id_orden) REFERENCES orden_compra(id_orden),
+    FOREIGN KEY (id_comprobante) REFERENCES comprobante(id_comprobante),
+    CHECK (
+        (id_orden IS NOT NULL AND id_comprobante IS NULL) OR
+        (id_orden IS NULL AND id_comprobante IS NOT NULL)
+    )
+);
+        </div>
+
+        <a class="btn-github" href="https://github.com/LosDogChamos/Taller-1.3.-Modelado-conceptual-y-fisico/blob/main/BDLavanderia" target="_blank">
+            <span>📂</span> Ver código completo (BDLavanderia) en GitHub
+        </a>
+
+        <hr>
+
+        <!-- ========= CASO 2 ========= -->
+        <h2 class="section-title">🛒 Caso 2 · Negocio de Comercio Electrónico</h2>
+        <p><strong>Requerimiento:</strong> Plataforma e-commerce con productos (categorías, marcas), clientes (direcciones múltiples), pedidos, ítems y opiniones.</p>
+
+        <div class="badge">📸 Imágenes del Caso 2 (archivos contiguos)</div>
+        <div class="image-grid">
+            <div class="card-img">
+                <img src="Img_2.0.png" alt="Modelo conceptual Lucidchart - E-commerce" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\' viewBox=\'0 0 400 200\'%3E%3Crect width=\'400\' height=\'200\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50\' y=\'100\' font-family=\'Arial\' font-size=\'14\' fill=\'%23555\'%3EImg_2.0.png (Lucidchart - conceptual)%3C/text%3E%3Ctext x=\'50\' y=\'130\' font-family=\'Arial\' font-size=\'12\' fill=\'%23777\'%3EArchivo no encontrado%3C/text%3E%3C/svg%3E'">
+                <div class="caption">Img 2.0: Modelo conceptual (Lucidchart)</div>
+                <div class="sub-caption">Diagrama Entidad-Relación del comercio electrónico</div>
+                <span class="file-name">Img_2.0.png</span>
+            </div>
+            <div class="card-img">
+                <img src="Img_2.1.png" alt="Modelo físico SQL - E-commerce" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\' viewBox=\'0 0 400 200\'%3E%3Crect width=\'400\' height=\'200\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'50\' y=\'100\' font-family=\'Arial\' font-size=\'14\' fill=\'%23555\'%3EImg_2.1.png (SQL - físico)%3C/text%3E%3Ctext x=\'50\' y=\'130\' font-family=\'Arial\' font-size=\'12\' fill=\'%23777\'%3EArchivo no encontrado%3C/text%3E%3C/svg%3E'">
+                <div class="caption">Img 2.1: Modelo físico (SQL)</div>
+                <div class="sub-caption">Implementación de tablas con restricciones</div>
+                <span class="file-name">Img_2.1.png</span>
+            </div>
+        </div>
+
+        <h3>🧩 Detalles del modelado</h3>
+        <ul>
+            <li><strong>Producto</strong> pertenece exactamente a una categoría (relación N:1) y a una marca (N:1).</li>
+            <li><strong>Cliente</strong> - <strong>Dirección</strong>: 1:N (un cliente puede tener múltiples direcciones de envío).</li>
+            <li><strong>Pedido</strong> contiene varios <strong>ItemPedido</strong> (detalle), y cada item referencia un producto.</li>
+            <li><strong>Cliente</strong> puede opinar sobre <strong>Producto</strong>: la entidad <code>OPINION</code> tiene doble referencia a cliente y producto.</li>
+        </ul>
+
+        <h3>📄 Script físico (fragmento)</h3>
+        <div class="code-block">
+-- Tablas para comercio electrónico (BD_Ecommerce)
+CREATE TABLE cliente (
+    id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_completo VARCHAR(120),
+    email VARCHAR(150) UNIQUE NOT NULL,
+    contrasena VARCHAR(255)
+);
+
+CREATE TABLE direccion_envio (
+    id_direccion INT PRIMARY KEY AUTO_INCREMENT,
+    direccion TEXT,
+    ciudad VARCHAR(60),
+    id_cliente INT,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+CREATE TABLE marca (
+    id_marca INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(60),
+    pais_origen VARCHAR(60)
+);
+
+CREATE TABLE categoria (
+    id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(60),
+    descripcion TEXT
+);
+
+CREATE TABLE producto (
+    id_producto INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    precio DECIMAL(10,2),
+    stock INT,
+    id_marca INT,
+    id_categoria INT,
+    FOREIGN KEY (id_marca) REFERENCES marca(id_marca),
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+);
+
+CREATE TABLE pedido (
+    id_pedido INT PRIMARY KEY AUTO_INCREMENT,
+    fecha DATETIME,
+    estado ENUM('Pendiente','Enviado','Entregado'),
+    id_cliente INT,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+CREATE TABLE item_pedido (
+    id_item INT PRIMARY KEY AUTO_INCREMENT,
+    cantidad INT,
+    id_pedido INT,
+    id_producto INT,
+    FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido),
+    FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
+
+CREATE TABLE opinion (
+    id_opinion INT PRIMARY KEY AUTO_INCREMENT,
+    calificacion TINYINT CHECK (calificacion BETWEEN 1 AND 5),
+    comentario TEXT,
+    fecha DATE,
+    id_cliente INT,
+    id_producto INT,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+    FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
+        </div>
+
+        <a class="btn-github" href="https://github.com/LosDogChamos/Taller-1.3.-Modelado-conceptual-y-fisico/blob/main/BD_Ecommerce" target="_blank">
+            <span>📂</span> Ver script completo (BD_Ecommerce) en GitHub
+        </a>
+
+        <hr>
+
+        <!-- CONCLUSIONES -->
+        <h2 class="section-title">✅ Reflexiones finales</h2>
+        <ul style="margin-bottom:2rem;">
+            <li><strong>Modelado conceptual vs físico:</strong> las imágenes 1.0 y 2.0 (Lucidchart) muestran la vista conceptual; las imágenes 1.1 y 2.1 (SQL) representan la implementación física.</li>
+            <li><strong>Manejo de signos en inventario:</strong> la solución con un único detalle simplifica el control de stock.</li>
+            <li><strong>Integridad referencial:</strong> todas las relaciones están protegidas con FOREIGN KEY.</li>
+            <li><strong>Direcciones múltiples:</strong> se normalizó en tabla separada para permitir N direcciones por cliente.</li>
+        </ul>
+
+        <!-- REFERENCIAS -->
+        <h2 class="section-title">🔗 Referencias</h2>
+        <div class="ref-link">
+            📦 Repositorio oficial: 
+            <a href="https://github.com/LosDogChamos/Taller-1.3.-Modelado-conceptual-y-fisico" target="_blank" style="color:#0a4b78;">https://github.com/LosDogChamos/Taller-1.3.-Modelado-conceptual-y-fisico</a>
+        </div>
+        
+        <div style="margin-top: 2rem; background: #f0f7ff; padding: 1rem; border-radius: 16px;">
+            <p style="font-weight: 600;">📁 Estructura de archivos esperada:</p>
+            <ul style="font-family: monospace;">
+                <li>📄 index.html (este archivo)</li>
+                <li>🖼️ Img_1.0.png - Modelo conceptual Caso 1 (Lucidchart)</li>
+                <li>🖼️ Img_1.1.png - Modelo físico Caso 1 (SQL)</li>
+                <li>🖼️ Img_2.0.png - Modelo conceptual Caso 2 (Lucidchart)</li>
+                <li>🖼️ Img_2.1.png - Modelo físico Caso 2 (SQL)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span style="font-weight:600;">Universidad Andina del Cusco</span> · Facultad de Ingeniería y Arquitectura · Modelado de Base de Datos · Taller 1.3 · 2026
+        <div style="margin-top: 0.6rem;">Los Dog Chamos 2.0 (ahora sí) · Cusco, Perú</div>
+    </div>
+</div>
+</body>
+</html>
